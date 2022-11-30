@@ -78,14 +78,6 @@ export default function App() {
 	    <Text style={styles.text}>--- 含んでいるトランザクション数 ---{"\n"} { txNum }</Text>
 	    <Text style={styles.text}>--- GAS使用率 ---{"\n"} { txNum }</Text>
 	    <Text style={styles.text}>--- ベースとなる手数料 (12,965,000以降のみ) --- {"\n"} { baseFee } GWei </Text>
-	    <TextInput
-		style={styles.input}
-		onChangeText={onChangeText}
-		value={text}
-		placeholder="useless placeholder"
-		keyboardType="text"
-	    />
-
 	</SafeAreaView>
     );
 }
