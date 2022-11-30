@@ -43,7 +43,7 @@ export default function App() {
 	    console.log(response);
 	    setBlockHash(response["hash"]);
 	    setTxNum(response["transactions"].length);
-	    setUsageRate(response["gasUsed"] / response["gasRatio"]);
+	    setUsageRate(response["gasUsed"] / response["gasLimit"]);
 	    setBaseFee(response["baseFeePerGas"] / 1000 / 1000 / 1000);
 	} catch (error) {
 	    console.error(error);
@@ -76,7 +76,7 @@ export default function App() {
 	    </View>
 	    <Text style={styles.text}>--- ブロックハッシュ --- { blockHash }</Text>
 	    <Text style={styles.text}>--- 含んでいるトランザクション数 ---{"\n"} { txNum }</Text>
-	    <Text style={styles.text}>--- GAS使用率 ---{"\n"} { txNum }</Text>
+	    <Text style={styles.text}>--- GAS使用率 ---{"\n"} { usageRate }</Text>
 	    <Text style={styles.text}>--- ベースとなる手数料 (12,965,000以降のみ) --- {"\n"} { baseFee } GWei </Text>
 	</SafeAreaView>
     );
