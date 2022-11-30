@@ -64,9 +64,16 @@ componentWillMount() {
   web3.eth.getBlock('latest').then(console.log)
 }
 ```
-
+最新のブロック高を取得
+```
+web3.eth.getBlockNumber().then(console.log) 
+```
 
 ## 参考
 1. Expo (React Native) and Web3.js
 
 https://github.com/abcoathup/expo-web3/blob/master/README.md
+
+2. Web3.js のドキュメント(web3.ethの使い方)
+
+https://web3js.readthedocs.io/en/v1.2.11/web3-eth.html

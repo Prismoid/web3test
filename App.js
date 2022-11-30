@@ -1,37 +1,58 @@
 import React, { useState, useEffect } from 'react';
-import {FlatList, ScrollView, View, StyleSheet, SafeAreaView, Text, TextInput, Button, TouchableOpacity} from 'react-native';
+import { View, StyleSheet, SafeAreaView, Text, TextInput } from 'react-native';
 import './global';
-import * as Crypto from 'expo-crypto';
+// import * as Crypto from 'expo-crypto';
 
-/* Web3 インストール方法:  https://github.com/abcoathup/expo-web3 */
+
+// Web3 インストール方法:  https://github.com/abcoathup/expo-web3
 export default function App() {
     // web3インスタンスの作成
     const Web3 = require('web3');
-    const provider = 'https://mainnet.infura.io/v3/bdc0b085953b453aa824a95288492245'
+    const provider = 'https://mainnet.infura.io/v3/bdc0b085953b453aa824a95288492245';
     web3Provider = new Web3.providers.HttpProvider(provider);
     const web3 = new Web3(web3Provider);
-    // デバッグ用
-    // web3.eth.getBlockNumber().then(console.log) 
+
     // useStateを利用した変数の宣言
     const [blockNumber, setBlockNumber] = useState([]);
-    const [miner, checkMiner] = useState([]);
+    const [block, setBlock] = useState([]);
+    const [blockHash, setBlockHash] = useState([]);
+    const [txNum, setTxNum] = useState([]);
+    const [usageRate, setUsageRate] = useState([]);
+    const [baseFee, setBaseFee] = useState([]);
     const [text, onChangeText] = React.useState(null);
-    const [number, onChangeNumber] = React.useState(null);
+    const [number, onChangeNumber] = React.useState(10000000);
+
     // Cryptoのインストール
-    Crypto.digestStringAsync(Crypto.CryptoDigestAlgorithm.SHA256,'seike').then(console.log);
-    // 副作用
-    useEffect(() => {
-	fetchBlockNumber();
-    }, [blockNumber]); // 空配列を渡すと、初回マウント時にのみ実行
-    // ブロック高を取得する関数
+    // Crypto.digestStringAsync(Crypto.CryptoDigestAlgorithm.SHA256,'seike').then(console.log);
+
+    //---------------------------------------------------//
+    // web3でブロックチェーンのデータを取得する関数群
+    //---------------------------------------------------//
+    // 現在のブロック高を取得
     const fetchBlockNumber = async () => {
 	try {
 	    const response = await web3.eth.getBlockNumber();
 	    setBlockNumber(response);
 	} catch (error) {
 	    console.error(error);
-	}
-    }
+	}}
+    // 指定した番号のブロックを取得
+    const fetchBlock = async (_blockNumber=number) => {
+	try {
+	    const response = await web3.eth.getBlock(_blockNumber);
+	    console.log(response);
+	    setBlockHash(response["hash"]);
+	    setTxNum(response["transactions"].length);
+	    setUsageRate(response["gasUsed"] / response["gasRatio"]);
+	    setBaseFee(response["baseFeePerGas"] / 1000 / 1000 / 1000);
+	} catch (error) {
+	    console.error(error);
+	}}
+    
+    // パラメータ更新時の処理
+    useEffect(() => { fetchBlockNumber(); }, [blockNumber]); // 空配列を渡すと、初回マウント時にのみ実行
+    useEffect(() => { fetchBlock(); }, [block, blockHash, txNum, baseFee]); // 空配列を渡すと、初回マウント時にのみ実行
+
     // SecureStore: https://docs.expo.dev/versions/latest/sdk/crypto/
     // SecureRandom: https://docs.expo.dev/versions/latest/sdk/random/ 
     //<SafeAreaView style={styles.itemContainer}>
@@ -39,8 +60,24 @@ export default function App() {
     /* レンダリング部分 */
     return (
 	<SafeAreaView style={styles.itemContainer}>
-	    <Text style={{fontSize: 32, color: "blue"}} onPress={async () => {setBlockNumber()}}>•ブロック高を取得: </Text>
+	    <Text style={{fontSize: 32, color: "blue"}} onPress={async () => {setBlockNumber()}}>-> ブロック高を取得: </Text>
 	    <Text style={styles.text}>{ blockNumber }</Text>
+	    <View style={{ flexDirection: 'row'}}>
+		<Text style={{fontSize: 32, color: "blue"}} onPress={async () => {setBlock(number); }}>-> 指定したブロックを取得: </Text>
+		<TextInput
+		    style={styles.input}
+		    mode="outlined"
+		    muiltiline
+		    onChangeText={onChangeNumber}
+		    value={number}
+		    placeholder="10000000"
+		    keyboardType="numeric"
+		/>
+	    </View>
+	    <Text style={styles.text}>--- ブロックハッシュ --- { blockHash }</Text>
+	    <Text style={styles.text}>--- 含んでいるトランザクション数 ---{"\n"} { txNum }</Text>
+	    <Text style={styles.text}>--- GAS使用率 ---{"\n"} { txNum }</Text>
+	    <Text style={styles.text}>--- ベースとなる手数料 (12,965,000以降のみ) --- {"\n"} { baseFee } GWei </Text>
 	    <TextInput
 		style={styles.input}
 		onChangeText={onChangeText}
@@ -48,20 +85,13 @@ export default function App() {
 		placeholder="useless placeholder"
 		keyboardType="text"
 	    />
-	    <TextInput
-		style={styles.input}
-		onChangeText={onChangeNumber}
-		value={number}
-		placeholder="useless placeholder"
-		keyboardType="numeric"
-	    />
+
 	</SafeAreaView>
     );
 }
 
 const styles = StyleSheet.create({
   itemContainer: {
-    height: 80,
     width: '100%',
     flexDirection: 'column',
   },
