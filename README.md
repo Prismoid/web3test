@@ -69,6 +69,14 @@ componentWillMount() {
 web3.eth.getBlockNumber().then(console.log) 
 ```
 
+## Expoのプロジェクト作成について
+```
+npx create-expo-app my-app
+cd my-app
+npx expo start # アプリ開発用サーバーの起動
+```
+
+
 ## 参考
 1. Expo (React Native) and Web3.js
 
@@ -77,3 +85,6 @@ https://github.com/abcoathup/expo-web3/blob/master/README.md
 2. Web3.js のドキュメント(web3.ethの使い方)
 
 https://web3js.readthedocs.io/en/v1.2.11/web3-eth.html
+
+3. Expo: Initializing the project
+https://docs.expo.dev/get-started/create-a-new-app/

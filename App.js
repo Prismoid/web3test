@@ -107,28 +107,3 @@ const styles = StyleSheet.create({
       fontSize: 32, 
   }, 
 });
-/*
-const styles = StyleSheet.create({
-    container: {
-	flex: 1,
-	backgroundColor: 'white',
-	fontSize: 16, 
-    },
-    button: {
-	justifyContent: 'left',
-	paddingVertical: 12,
-	paddingHorizontal: 32,
-	borderRadius: 4,
-	elevation: 3,
-	backgroundColor: 'blue',
-	fontSize: 16, 
-    },
-    text: {
-	fontSize: 16,
-	lineHeight: 21,
-	fontWeight: 'bold',
-	letterSpacing: 0.25,
-	color: 'white',
-    },
-});
-*/
